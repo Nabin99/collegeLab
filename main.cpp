@@ -529,7 +529,7 @@ int lcount=0;
    cout<<"\nTransition table for DFA"<<endl;
    cout<<"\t";
   while(j<scnt){
-    cout<<sigma[j++]<<" \t ";
+    cout<<sigma[j++]<<"\t";
   }
   cout<<endl;
    j=0;
