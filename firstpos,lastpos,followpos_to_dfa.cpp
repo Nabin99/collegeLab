@@ -400,26 +400,38 @@ int start(){
            regexp[i]=='('||
            regexp[i]=='+'){
            //the codes below here follows postfix evaluation
-           if((regexp[i]=='.'||regexp[i]=='|'||regexp[i]=='+')&&
+           if((regexp[i]=='|'||regexp[i]=='+')&&
                ('*'==operatornode[k]||'|'==operatornode[k]||'.'==operatornode[k]||'+'==operatornode[k])){
 
                 while(('*'==operatornode[k]||'|'==operatornode[k]||
                        '.'==operatornode[k]||
-                       '+'==operatornode[k])&&k>-1)
+                       '+'==operatornode[k])&&k>-1){
                if(operatornode[k]=='.')
                  catnode();//calls if '.'
                  else if('*'==operatornode[k])
                     starnode();//calls if '*'
                     else
                         ornode();//calls if '|' / '+'
+                       }
+
+               }
+               else if ((regexp[i]=='.')&&('*'==operatornode[k]||'.'==operatornode[k])){
+                 while(('*'==operatornode[k]||
+                       '.'==operatornode[k])&&k>-1){
+               if(operatornode[k]=='.')
+                 catnode();//calls if '.'
+                 else if('*'==operatornode[k])
+                    starnode();//calls if '*'
+                    else
+                        continue;//ornode();//calls if '|' / '+'
+                       }
 
                }
             else if(regexp[i]=='*'&&
                     ('*'==operatornode[k])){
-
-                                starnode();//calls if '*'
+                                         while(('*'==operatornode[k])&&k>-1)
+                                            starnode();//calls if '*'
                 }
-
             operatornode[++k]=regexp[i];//finally adds current regexp operator to top of operatornode stack
 //codes above here follows postfix evaluation
            }
@@ -442,7 +454,6 @@ while(k>-1){
         ornode();//calls if '|' / '+'
     else
         catnode();//calls if '.'
-    k--;
 
 }
 return 0;
@@ -453,8 +464,9 @@ return 0;
 int main()
 {
 int lcount=0;
-    cout << "Enter the length of regex[0,100]"<<
-            "\n****  including '.' symbol ****"<<
+    char* inputreg;
+    cout << "enter the length of string{0,100}"<<
+            "\n****  including '.' node   ****"<<
             "\n**** excluding '.#' at end ****" <<endl<<"=>";
     cin >> l;
     if(l<0||l>100){
@@ -462,21 +474,27 @@ int lcount=0;
         " \n***between 0 to 100***"<<endl;
         return 0;
     }
-    cout << "Enter the regular expression" << endl<<"=>";
-    cin >> regexp;
-
-    while(regexp[lcount]!='\0')
+    inputreg= new char [l];
+    cout << "enter the regular expression" << endl<<"=>";
+    cin >> inputreg;
+    regexp[0]='(';
+    while(inputreg[lcount]!='\0'){
+            regexp[lcount+1]=inputreg[lcount];
         lcount++;
-
+    }
+    delete inputreg;
     if(l>lcount|| l<lcount){
         cout<<"***please enter the regular expression of length you entered above***"<<endl;
         return 0;
     }
-
+    l++;
+    regexp[l++]=')';
     regexp[l++]='.';//concats '.'
     regexp[l++]='#';//concats '#'
+cout<<"the augmented regular expression is: ";
+    cout << regexp<<endl;
 
-    if(-1 ==
+     if(-1 ==
     start()// calculates firstpos and lastpos
     )
     return 0;
